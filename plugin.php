@@ -3,8 +3,8 @@
   /**
     This is the AuthorWidget plugin.
 
-    This file contains the AuthorWidget plugin. It provides a widget that
-    lists all available authors.
+    This file contains the AuthorWidget plugin. It provides a widget that lists
+    all available authors.
 
     @package urlaube\authorwidget
     @version 0.1a0
