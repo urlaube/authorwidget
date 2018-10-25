@@ -7,7 +7,7 @@
     all available authors.
 
     @package urlaube\authorwidget
-    @version 0.1a0
+    @version 0.1a1
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -25,38 +25,41 @@
       $result = null;
 
       $authors = [];
+      if (!getcache(null, $authors, static::class)) {
+        FilePlugin::loadContentDir(USER_CONTENT_PATH, true,
+                                   function ($content) use (&$authors) {
+                                     $result = null;
 
-      FilePlugin::loadContentDir(USER_CONTENT_PATH, true,
-                                 function ($content) use (&$authors) {
-                                   $result = null;
+                                     // check that $content is not hidden
+                                     if (!istrue(value($content, HIDDEN))) {
+                                       // check that $content is not hidden from author
+                                       if (!istrue(value($content, HIDDENFROMAUTHOR))) {
+                                         // check that $content is not a relocation
+                                         if (null === value($content, RELOCATE)) {
+                                           // read the author
+                                           $authorvalue = value($content, AUTHOR);
+                                           if (null !== $authorvalue) {
+                                             // make sure that only valid characters are contained
+                                             if (1 === preg_match("~^[0-9A-Za-z\_\-]+$~", $authorvalue)) {
+                                               $authorvalue = strtolower($authorvalue);
 
-                                   // check that $content is not hidden
-                                   if (!istrue(value($content, HIDDEN))) {
-                                     // check that $content is not hidden from author
-                                     if (!istrue(value($content, HIDDENFROMAUTHOR))) {
-                                       // check that $content is not a relocation
-                                       if (null === value($content, RELOCATE)) {
-                                         // read the author
-                                         $authorvalue = value($content, AUTHOR);
-                                         if (null !== $authorvalue) {
-                                           // make sure that only valid characters are contained
-                                           if (1 === preg_match("~^[0-9A-Za-z\_\-]+$~", $authorvalue)) {
-                                             $authorvalue = strtolower($authorvalue);
-
-                                             if (isset($authors[$authorvalue])) {
-                                               $authors[$authorvalue]++;
-                                             } else {
-                                               $authors[$authorvalue] = 1;
+                                               if (isset($authors[$authorvalue])) {
+                                                 $authors[$authorvalue]++;
+                                               } else {
+                                                 $authors[$authorvalue] = 1;
+                                               }
                                              }
                                            }
                                          }
                                        }
                                      }
-                                   }
 
-                                   return null;
-                                 },
-                                 true);
+                                     return null;
+                                   },
+                                   true);
+
+        setcache(null, $authors, static::class);
+      }
 
       if (0 < count($authors)) {
         // sort the authors
@@ -76,7 +79,7 @@
 
         $result = new Content();
         $result->set(CONTENT, $content);
-        $result->set(TITLE,   t("Autoren", AuthorWidget::class));
+        $result->set(TITLE,   t("Autoren", static::class));
       }
 
       return $result;
