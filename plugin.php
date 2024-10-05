@@ -7,7 +7,7 @@
     all available authors.
 
     @package urlaube\authorwidget
-    @version 0.1a2
+    @version 0.1a3
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -71,7 +71,7 @@
 
           $content .= fhtml("  <span class=\"glyphicon glyphicon-user\"></span> <a href=\"%s\">%s</a> (%d)".BR.NL,
                             AuthorHandler::getUri($metadata),
-                            $key,
+                            str_replace("_", SP, $key),
                             $value);
         }
         $content .= fhtml("</div>");

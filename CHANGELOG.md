@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1a3 (05.10.2024)
+### Features
+* replace `_` in author names with spaces
+
 ## 0.1a2 (03.11.2018)
 ### Features
 * updated plugin to be compatible with Urlaube 0.1a10
